@@ -1,4 +1,4 @@
-import productos from "../db/productos.js";
+import productos from "../db/productos.js"; 
 
 let productoId = Date.now();
 
@@ -16,8 +16,8 @@ const obtenerLaPosicionDelProducto = (id) => {
 }
 
 const crearProducto = (producto) => {
-    producto.Id = productoId
-    producto.push(producto)
+    producto.id = productoId
+    productos.push(producto)
     return producto
 }
 

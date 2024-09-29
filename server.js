@@ -1,6 +1,7 @@
 import express from "express";
 import "dotenv/config";
 import routerProductos from "./src/routers/productos-router.js";
+import routerUsuarios from "./src/routers/user-router.js";
 
 //! Constantes
 const app = express();
@@ -59,6 +60,9 @@ app.get("/resetPass", (req, res) => {
 
 //?PRODUCTOS
 app.use('/api/productos', routerProductos)
+
+//?USUARIOS
+app.use('/api/usuarios', routerUsuarios)
 /* //* Cargar Producto Apunte
 app.get("/cargarApunte", (req, res) => {
     res.sendFile("./loadProductApunte.html", {root: "views"})
