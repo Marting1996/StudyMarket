@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/style.css" title>Iniciar Sesion</title>
+    <link rel="stylesheet" href="./css/style.css" title>Iniciar Sesion</title>
 </head>
 
 <body>
@@ -37,18 +37,20 @@
         <!-- Campo Nombre -->
         <div class="campoNombre">
             <label for="lbl-nombre">Nombre</label>
-            <input type="text" name="nombre" id="lbl-nombre" placeholder="Ingrese su nombre">
+            <input type="text" name="nombre" id="lbl-nombre" placeholder="Ingrese su nombre" required >
             <span data-error="nombre-error"></span>
         </div>
         <!-- Campo Apellido -->
         <div class="campoApellido">
             <label for="lbl-apellido">Apellido</label>
-            <input type="text" name="apellido" id="lbl-apellido" placeholder="Ingrese su apellido">
+            <input type="text" name="apellido" id="lbl-apellido" placeholder="Ingrese su apellido" required>
+            <span data-error="apellido-error"></span>
         </div>
         <!-- Campo Email -->
         <div class="campoEmail">
             <label for="lbl-email">Correo</label>
-            <input type="email" placeholder="Ingrese su correo" name="email" id="lbl-email">
+            <input type="email" placeholder="Ingrese su correo" name="email" id="lbl-email" required>
+            <span data-error="email-error"></span>
         </div>
         <!-- Campo Password -->
         <div class="campoPassword">
