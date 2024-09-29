@@ -1,5 +1,6 @@
 import express from "express";
 import "dotenv/config";
+import routerProductos from "./src/routers/productos-router.js";
 
 //! Constantes
 const app = express();
@@ -31,16 +32,6 @@ app.get("/forgotPass", (req, res) => {
     res.sendFile("./forgotpass.html", { root: "views"})
 })
 
-//* Cargar Producto Apunte
-app.get("/cargarApunte", (req, res) => {
-    res.sendFile("./loadProductApunte.html", {root: "views"})
-})
-
-//* Cargar Porducto Libro
-app.get("/cargarLibro", (req, res) => {
-    res.sendFile("./loadProductLibro.html", {root: "views"})
-})
-
 //* Login
 app.get("/login", (req, res) => {
     res.sendFile("./login.html", {root: "view"})
@@ -65,6 +56,18 @@ app.get("/registrarse", (req, res) => {
 app.get("/resetPass", (req, res) => {
     res.sendFile("./resetPass.html", {root: "views"})
 })
+
+//?PRODUCTOS
+app.use('/api/productos', routerProductos)
+/* //* Cargar Producto Apunte
+app.get("/cargarApunte", (req, res) => {
+    res.sendFile("./loadProductApunte.html", {root: "views"})
+})
+
+//* Cargar Porducto Libro
+app.get("/cargarLibro", (req, res) => {
+    res.sendFile("./loadProductLibro.html", {root: "views"})
+}) */
 
 //! Arranque del servidor
 
