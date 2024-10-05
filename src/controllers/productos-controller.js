@@ -40,14 +40,14 @@ const editProducto = (req, res) => {
     const productoActualizado = modelProductos.actualizarProducto(
       index,
       id,
-      productoPorEditar
+      productoPorEditar,
     );
     res.json(productoActualizado);
     console.log("Producto actualizado correctamente");
   } else {
-    res
-      .status(404)
-      .json({ mensaje: "No se encontro el producto solicitado para editar" });
+    res.status(404).json({
+      mensaje: "No se encontro el producto solicitado para editar",
+    });
   }
 };
 
@@ -62,17 +62,16 @@ const removeProducto = (req, res) => {
     res.json(productoEliminado);
     console.log("Producto eliminado correctamente");
   } else {
-    res
-      .status(404)
-      .json({ mensaje: "No se encontro el producto para eliminarlo" });
+    res.status(404).json({
+      mensaje: "No se encontro el producto para eliminarlo",
+    });
   }
 };
 
-
 export default {
-    getAll,
-    getOne,
-    createProduct,
-    editProducto,
-    removeProducto
-}
+  getAll,
+  getOne,
+  createProduct,
+  editProducto,
+  removeProducto,
+};
