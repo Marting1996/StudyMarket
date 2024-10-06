@@ -32,7 +32,7 @@ const obteneterLaPosicionDelUsuario = (id) => {
 const crearUsuario = async (usuario) => {
   try {
     const usuarioCreado = new UsuarioModelo(usuario);
-    usuarioCreado.password = await usuarioCreado.ecriptarPassword(
+    usuarioCreado.password = await usuarioCreado.encriptarPassword(
       usuario.password,
     );
 

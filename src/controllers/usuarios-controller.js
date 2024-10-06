@@ -1,8 +1,8 @@
 import modelUsuarios from "../models/usuarios-models.js";
 
 const formularioRegistro = (req, res) => {
-  res.render("usuarios/register")
-}
+  res.render("usuarios/register");
+};
 
 //!GET ALL
 const getAll = (req, res) => {
@@ -36,7 +36,7 @@ const getUserByEmail = (req, res) => {
   }
 };
 
-//!CREATE
+//!REGISTER
 const createUser = async (req, res) => {
   const usuario = req.body;
 
@@ -44,9 +44,53 @@ const createUser = async (req, res) => {
   const errores = [];
   try {
     // Validadores
-    if ((password = !confirm_password)) {
+    if (!name || !email || !password || !confirm_password) {
+      errores.push({ mensaje: "Todos los campos son obligatorios" });
+    }
+
+    if (!name || name.trim().length < 2) {
+      errores.push({ mensaje: "El nombre debe tener al menos 2 caracteres" });
+    }
+
+    const nameRegex = /^[a-zA-Z\s]+$/;
+
+    if (!nameRegex.test(name)) {
+      errores.push({
+        mensaje: "El nombre solo puede contener letras y espacios",
+      });
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(email)) {
+      errores.push({ mensaje: "El correo electrónico no es válido" });
+    }
+
+    if (password == !confirm_password) {
       errores.push({ mensaje: "Las contraseñas no coinciden" });
     }
+
+    /* const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+
+    if (!passwordRegex.test(password)) {
+      errores.push({
+        mensaje:
+          "La contraseña debe tener al menos 8 caracteres, incluyendo una mayúscula, una minúscula, un número y un carácter especial",
+      });
+    } */
+
+    /* const weakPasswords = ["123456", "password", "qwerty", "admin"];
+
+    if (weakPasswords.includes(password)) {
+      errores.push({
+        mensaje: "La contraseña es demasiado común, elige una más segura",
+      });
+    } */
+    /* if (password.length > 30) {
+      errores.push({
+        mensaje: "La contraseña no puede tener más de 30 caracteres",
+      });
+    } */
     const usuarioEncontrado = await modelUsuarios.obtenerUsuarioPorEmail(email);
 
     if (usuarioEncontrado) {
@@ -54,7 +98,7 @@ const createUser = async (req, res) => {
     }
 
     if (errores.length > 0) {
-      return res.status(400).json(erroes);
+      return res.status(400).json(errores);
     }
 
     // Crear usuarios
@@ -63,7 +107,7 @@ const createUser = async (req, res) => {
     const objRespuesta = {
       name: usuarioCreado.name,
       email: usuarioCreado.email,
-      id: usuarioCreado_id,
+      id: usuarioCreado._id,
     };
 
     res.json(objRespuesta);

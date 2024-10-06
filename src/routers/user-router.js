@@ -11,8 +11,8 @@ routerUsuarios.get('/:id', controladorUsuarios.getUserById)
 //!READ ONE BY EMAIL
 routerUsuarios.get('/:id', controladorUsuarios.getUserByEmail)
 
-//!CREATE
-routerUsuarios.post('/crearapunte', controladorUsuarios.createUser)
+//!REGISTER
+routerUsuarios.post('/api/auth/register', controladorUsuarios.createUser)
 
 //!UPDATE
 routerUsuarios.put('/:id', controladorUsuarios.editUsuatio)

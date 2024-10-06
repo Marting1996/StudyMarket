@@ -1,68 +1,47 @@
 import express from "express";
+import MongoStore from "connect-mongo";
 import "dotenv/config";
+import passport from 'passport'
+import session from "express-session";
+
 import routerProductos from "./src/routers/productos-router.js";
 import routerUsuarios from "./src/routers/user-router.js";
+import handleConnection from "./src/utils/handle-connection.js";
 
 //! Constantes
 const app = express();
 const PORT = process.env.PORT || 8888;
+const NODE_ENV = process.env.NODE_ENV;
+const MONGO_LOCAL = process.env.MONGO_LOCAL;
+const MONGO_REMOTO = process.env.MONGO_REMOTO;
+const SECRET_SESSION = process.env.SECRET;
 
 //! Middlewares
 app.use(express.static("./public"));
 app.use(express.static("./views"));
 app.use(express.json());
+app.use(express.urlencoded({ extends: true }));
+
+// ! Configuracion express-sessions
+app.use(
+  session({
+    secret: SECRET_SESSION,
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({ mongoUrl: MONGO_REMOTO }),
+  }),
+);
+
+//! Configurando Passport
+app.use(passport.initialize())
+app.use(passport.session())
 
 //! Rutas
-//* Inicio
-app.get('/', (req, res) => {
-    res.sendFile("./index.html", {root: 'public'})
-})
-
-//* Carrito
-app.get("/carrito", (req, res) => {
-  res.sendFile("./carrito.html", { root: "views" });
-});
-
-//* Sobre nosotros
-app.get("/sobreNosotros", (req, res) => {
-  res.sendFile("./sobreNosotos.html", { root: "views" });
-});
-
-//* Forgot pass
-app.get("/forgotPass", (req, res) => {
-    res.sendFile("./forgotpass.html", { root: "views"})
-})
-
-//* Login
-app.get("/login", (req, res) => {
-    res.sendFile("./login.html", {root: "view"})
-})
-
-//* Perfil
-app.get("/perfil", (req, res) => {
-    res.sendFile("./perfil.html", { root: "views" });
-});
-
-//* Publicacion 
-app.get("/publicacion", (req, res) => {
-    res.sendFile("./publicacion.html", {root: "views"})
-})
-
-//* Registrarse
-app.get("/registrarse", (req, res) => {
-    res.sendFile("./registrarse.html", {root: "views"})
-})
-
-//* Reset pass
-app.get("/resetPass", (req, res) => {
-    res.sendFile("./resetPass.html", {root: "views"})
-})
-
 //?PRODUCTOS
-app.use('/api/productos', routerProductos)
+app.use("/api/productos", routerProductos);
 
 //?USUARIOS
-app.use('/api/usuarios', routerUsuarios)
+app.use("/", routerUsuarios);
 /* //* Cargar Producto Apunte
 app.get("/cargarApunte", (req, res) => {
     res.sendFile("./loadProductApunte.html", {root: "views"})
@@ -78,4 +57,9 @@ app.get("/cargarLibro", (req, res) => {
 app.listen(PORT, (err) => {
   if (err) throw new Error(`No se pudo levantar el servidor ${err}`);
   console.log(`La aplicaión arrancó -> http://localhost:${PORT}`);
+  if (NODE_ENV === "desarrollo") {
+    handleConnection(MONGO_REMOTO);
+  } else {
+    handleConnection(MONGO_LOCAL);
+  }
 });
