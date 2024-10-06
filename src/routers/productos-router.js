@@ -9,7 +9,7 @@ routerProductos.get('/', controladorProductos.getAll)
 routerProductos.get('/:id', controladorProductos.getOne)
 
 //!CREATE
-routerProductos.post('/crearapunte', controladorProductos.createProduct)
+routerProductos.post('/api/productos/crearapunte', controladorProductos.createProduct)
 
 //!UPDATE
 routerProductos.put('/:id', controladorProductos.editProducto)

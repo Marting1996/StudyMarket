@@ -38,7 +38,7 @@ app.use(passport.session())
 
 //! Rutas
 //?PRODUCTOS
-app.use("/api/productos", routerProductos);
+app.use("/", routerProductos);
 
 //?USUARIOS
 app.use("/", routerUsuarios);

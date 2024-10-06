@@ -20,13 +20,33 @@ const getOne = (req, res) => {
 };
 
 //!CREATE
-const createProduct = (req, res) => {
-  const productoPorCrear = req.body;
+const createProduct = async (req, res) => {
+  const producto = req.body;
+  const { titulo, descripcion, etiquetas, precio } = producto;
+  const errores = [];
 
-  const productoCreado = modelProductos.crearProducto(productoPorCrear);
+  try {
+    //Validadores
+    if (!titulo || !precio) {
+      errores.push({ mensaje: "Los campos Titulo y Precio son obligatorios" });
+    }
+    if (titulo.trim().length < 2) {
+      errores.push({ mensaje: "El titulo debe tener al menos 2 caracteres" });
+    }
 
-  res.status(201).json(productoCreado);
-  console.log("Producto creado correctamente");
+    if (errores.length > 0) {
+      return res.status(400).json(errores);
+    }
+
+    //Crear producto
+    const productoCreado = await modelProductos.crearProducto(producto);
+    console.log("Producto creado con exito:", productoCreado);
+    
+    res.json(productoCreado);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ mensaje: "No se pudo crear el producto" });
+  }
 };
 
 //!EDIT

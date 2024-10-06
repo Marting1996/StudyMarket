@@ -1,5 +1,8 @@
 import productos from "../db/productos.js";
+import mongoose from "mongoose";
+import productosEsquema from "./schemas/productos.schemas.js";
 
+const ProductoModelo = mongoose.model("productos", productosEsquema)
 let productoId = Date.now();
 
 const obtenerTodosLosProductos = () => {
@@ -15,10 +18,14 @@ const obtenerLaPosicionDelProducto = (id) => {
    return productos.findIndex((prod) => prod.id === id);
 };
 
-const crearProducto = (producto) => {
-   producto.id = productoId;
-   productos.push(producto);
-   return producto;
+const crearProducto =  async (producto) => {
+   try {
+      const productoCreado = new ProductoModelo(producto)
+      await productoCreado.save()
+      return productoCreado
+   } catch (error) {
+      throw error
+   }
 };
 
 const actualizarProducto = (index, id, productoPorEditar) => {
