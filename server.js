@@ -38,10 +38,10 @@ app.use(passport.session())
 
 //! Rutas
 //?PRODUCTOS
-app.use("/", routerProductos);
+app.use("/api/productos", routerProductos);
 
 //?USUARIOS
-app.use("/", routerUsuarios);
+app.use("/api/usuarios", routerUsuarios);
 /* //* Cargar Producto Apunte
 app.get("/cargarApunte", (req, res) => {
     res.sendFile("./loadProductApunte.html", {root: "views"})

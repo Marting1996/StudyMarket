@@ -1,13 +1,19 @@
 import mongoose from "mongoose";
 import usuariosEsquema from "./schemas/usuarios.schemas.js";
-import usuarios from "../db/users.js";
+
 
 const UsuarioModelo = mongoose.model("usuarios", usuariosEsquema);
 
 let usuarioId = Date.now();
 
-const obtenerTodosLosUsuarios = () => {
-  return usuarios;
+const obtenerTodosLosUsuarios = async () => {
+  try {
+    const usuarios = await UsuarioModelo.find()
+    return usuarios
+  } catch (error) {
+    throw error
+  }
+
 };
 
 const obtenerUsuarioPorId = (id) => {

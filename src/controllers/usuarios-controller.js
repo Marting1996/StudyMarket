@@ -5,9 +5,15 @@ const formularioRegistro = (req, res) => {
 };
 
 //!GET ALL
-const getAll = (req, res) => {
-  const usuarios = modelUsuarios.obtenerTodosLosUsuarios();
-  res.json(usuarios);
+const getAll = async (req, res) => {
+  try {
+    const usuarios = await modelUsuarios.obtenerTodosLosUsuarios()
+    res.json(usuarios)
+  } catch (error) {
+    console.log(error);
+    
+    res.status(404).json({mensaje: "No se encontraron los usuarios"})
+  }
 };
 
 //!GET ONE BY ID
@@ -65,7 +71,7 @@ const createUser = async (req, res) => {
       errores.push({ mensaje: "El correo electrónico no es válido" });
     }
 
-    if (password == !confirm_password) {
+    if (password ==! confirm_password) {
       errores.push({ mensaje: "Las contraseñas no coinciden" });
     }
 
