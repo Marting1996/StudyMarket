@@ -32,4 +32,8 @@ usuariosEsquema.methods.encriptarPassword = async (password) => {
   }
 };
 
+usuariosEsquema.methods.comprobarPassword = async function (password) {
+  return await bcrypt.compare(password, this.password)
+}
+
 export default usuariosEsquema;

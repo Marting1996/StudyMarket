@@ -49,6 +49,15 @@ const crearUsuario = async (usuario) => {
   }
 };
 
+const revisarPassword = async (usuario, password) => {
+  try {
+    const isMatch = await usuario.comprobarPassword(password)
+    return isMatch
+  } catch (error) {
+    throw error
+  }
+}
+
 const actualizarUsuario = (index, id, usuarioPorEditar) => {
   usuarioPorEditar.id = id;
   usuarios.splice(index, 1, usuarioPorEditar);
@@ -69,4 +78,5 @@ export default {
   crearUsuario,
   actualizarUsuario,
   eliminarUsuario,
+  revisarPassword
 };

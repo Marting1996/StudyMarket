@@ -1,12 +1,14 @@
 import express from "express";
 import MongoStore from "connect-mongo";
-import "dotenv/config";
 import passport from 'passport'
 import session from "express-session";
+import "dotenv/config";
+import methodOverride from "method-override";
 
 import routerProductos from "./src/routers/productos-router.js";
 import routerUsuarios from "./src/routers/user-router.js";
 import handleConnection from "./src/utils/handle-connection.js";
+import * as passportStrategy from "./src/utils/handle-passport.js"
 
 //! Constantes
 const app = express();
@@ -21,6 +23,7 @@ app.use(express.static("./public"));
 app.use(express.static("./views"));
 app.use(express.json());
 app.use(express.urlencoded({ extends: true }));
+app.use(methodOverride('_method'))
 
 // ! Configuracion express-sessions
 app.use(

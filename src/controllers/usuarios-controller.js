@@ -1,3 +1,4 @@
+import  passport  from "passport";
 import modelUsuarios from "../models/usuarios-models.js";
 
 const formularioRegistro = (req, res) => {
@@ -74,7 +75,7 @@ const createUser = async (req, res) => {
     if (password ==! confirm_password) {
       errores.push({ mensaje: "Las contraseñas no coinciden" });
     }
-
+    //! Validaciones de contraseña para usar en la version final
     /* const passwordRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
 
@@ -123,6 +124,12 @@ const createUser = async (req, res) => {
     res.status(500).json({ mensaje: "No se pudo registrar el usuario" });
   }
 };
+
+//!LOG IN
+const login = passport.authenticate("local", {
+  successRedirect: "/",
+  failureRedirect: "/api/usuarios/login"
+})
 
 //!EDIT
 const editUsuatio = (req, res) => {
