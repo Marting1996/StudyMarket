@@ -4,6 +4,7 @@ import passport from 'passport'
 import session from "express-session";
 import "dotenv/config";
 import methodOverride from "method-override";
+import { engine } from "express-handlebars";
 
 import routerProductos from "./src/routers/productos-router.js";
 import routerUsuarios from "./src/routers/user-router.js";
@@ -17,6 +18,18 @@ const NODE_ENV = process.env.NODE_ENV;
 const MONGO_LOCAL = process.env.MONGO_LOCAL;
 const MONGO_REMOTO = process.env.MONGO_REMOTO;
 const SECRET_SESSION = process.env.SECRET;
+
+//! Handlebars
+app.engine(
+  "hbs",
+  engine({
+    defaultLayout: "main",
+    extname: ".hbs"
+  })
+)
+
+app.set("view engine", "hbs")
+app.set("views", "./views")
 
 //! Middlewares
 app.use(express.static("./public"));
