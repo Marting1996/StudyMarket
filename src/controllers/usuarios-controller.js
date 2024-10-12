@@ -1,5 +1,7 @@
-import  passport  from "passport";
+import passport from "passport";
 import modelUsuarios from "../models/usuarios-models.js";
+import jwt from "jsonwebtoken";
+import * as passportStrategyJwt from "../utils/handle-jwt.js";
 
 const formularioRegistro = (req, res) => {
   res.render("usuarios/register");
@@ -8,12 +10,12 @@ const formularioRegistro = (req, res) => {
 //!GET ALL
 const getAll = async (req, res) => {
   try {
-    const usuarios = await modelUsuarios.obtenerTodosLosUsuarios()
-    res.json(usuarios)
+    const usuarios = await modelUsuarios.obtenerTodosLosUsuarios();
+    res.json(usuarios);
   } catch (error) {
     console.log(error);
-    
-    res.status(404).json({mensaje: "No se encontraron los usuarios"})
+
+    res.status(404).json({ mensaje: "No se encontraron los usuarios" });
   }
 };
 
@@ -72,7 +74,7 @@ const createUser = async (req, res) => {
       errores.push({ mensaje: "El correo electrónico no es válido" });
     }
 
-    if (password ==! confirm_password) {
+    if (password == !confirm_password) {
       errores.push({ mensaje: "Las contraseñas no coinciden" });
     }
     //! Validaciones de contraseña para usar en la version final
@@ -126,10 +128,35 @@ const createUser = async (req, res) => {
 };
 
 //!LOG IN
-const login = passport.authenticate("local", {
-  successRedirect: "/",
-  failureRedirect: "/api/usuarios/login"
-})
+const formularioLogeo = (req, res) => {
+  res.render("usuarios/login");
+};
+
+//?LOGIN JWT
+const login =
+  (passport.authenticate("local"),
+  (req, res) => {
+    // http://localhost:8080/jwt/login
+    // Estamos firmando el token
+    const payload = { id: req.user._id };
+    const secret_jwt = process.env.JWT;
+    const tiempo_duracion_token = { expiresIn: "1h" };
+    const token = jwt.sign(payload, secret_jwt, tiempo_duracion_token);
+    res.json({ token });
+  });
+
+//!PERFIL
+const perfil = (passport.authenticate("jwt"), (req, res) => {
+    //http://localhost:8080/jwt/profile
+    const usuario = req.user;
+    const usuarioPersonalidado = {
+      nombre: usuario.name,
+      email: usuario.email,
+    };
+    console.log("Usuario conectado:", usuarioPersonalidado);
+    
+    res.json({ usuario: usuarioPersonalidado });
+  });
 
 //!EDIT
 const editUsuatio = (req, res) => {
@@ -173,4 +200,9 @@ export default {
   createUser,
   editUsuatio,
   eliminarUsuario,
+  formularioRegistro,
+  login,
+  //logout,
+  perfil,
+  formularioLogeo,
 };

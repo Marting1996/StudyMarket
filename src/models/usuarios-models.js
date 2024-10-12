@@ -1,10 +1,7 @@
 import mongoose from "mongoose";
 import usuariosEsquema from "./schemas/usuarios.schemas.js";
 
-
 const UsuarioModelo = mongoose.model("usuarios", usuariosEsquema);
-
-let usuarioId = Date.now();
 
 const obtenerTodosLosUsuarios = async () => {
   try {
@@ -16,13 +13,22 @@ const obtenerTodosLosUsuarios = async () => {
 
 };
 
-const obtenerUsuarioPorId = (id) => {
-  const usuario = usuarios.find((user) => user.id === id);
-  return usuario;
+const obtenerUsuarioPorId = async (id) => {
+  
+  try {
+    const usuario = await UsuarioModelo.findById(id)
+    return usuario
+  } catch (error) {
+    console.log("[obtenerUsuarioPorId]", error);
+    
+  }
+  
 };
 const obtenerUsuarioPorEmail = async (email) => {
   try {
-    const usuarioEncontrado = await UsuarioModelo.findOne({ emal: email });
+    const usuarioEncontrado = await UsuarioModelo.findOne({ email: email });
+    console.log("[usuarioEncontradoPorEmail]", usuarioEncontrado);
+    
     return usuarioEncontrado;
   } catch (error) {
     throw error;

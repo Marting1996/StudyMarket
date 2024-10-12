@@ -7,7 +7,15 @@ const routerUsuarios = express.Router()
 routerUsuarios.get('/getall', controladorUsuarios.getAll)
 
 //!REGISTER
+routerUsuarios.get('/register', controladorUsuarios.formularioRegistro)
 routerUsuarios.post('/register', controladorUsuarios.createUser)
+
+//!LOGIN
+routerUsuarios.get("/login", controladorUsuarios.login)
+//routerUsuarios.post("/login", controladorUsuarios.login)
+
+//!PERFIL
+routerUsuarios.get("/perfil", controladorUsuarios.perfil)
 
 //!READ ONE BY EMAIL
 routerUsuarios.get('/email/:email', controladorUsuarios.getUserByEmail) 
@@ -25,5 +33,6 @@ routerUsuarios.delete('/delete/:id', controladorUsuarios.eliminarUsuario)
 routerUsuarios.all('*', (req, res) => {
     res.status(404).json({ mensaje: "Recurso no encontrado" })
 })
+
 
 export default routerUsuarios

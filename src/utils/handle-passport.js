@@ -1,13 +1,14 @@
 import { Strategy } from "passport-local";
-import usuariosModels from "../models/usuarios-models";
 import passport  from "passport";
-
+import usuariosModels from "../models/usuarios-models.js";
 
 const fieldEstrategia = { usernameField: 'email'}
 
 const comprobacionUsuario = async (email, password, done) => {
     try {
         const usuario = await usuariosModels.obtenerUsuarioPorEmail(email)
+        console.log("[comprobacionUsuario]", usuario);
+        
 
         if(!usuario) {
             return done(null, false, {mensaje: "El usuario no existe"})
@@ -27,7 +28,7 @@ const comprobacionUsuario = async (email, password, done) => {
 
 const estrategiaLocal = new Strategy(fieldEstrategia, comprobacionUsuario)
 
-passport.serializeUser((usuario, done) => {
+passport.serializeUser((usuario, done) => { 
     done(null,usuario.id)
 })
 

@@ -1,15 +1,18 @@
 import express from "express";
+import { engine } from "express-handlebars";
+import session from "express-session";
 import MongoStore from "connect-mongo";
 import passport from 'passport'
-import session from "express-session";
 import "dotenv/config";
 import methodOverride from "method-override";
-import { engine } from "express-handlebars";
+import jwt from "jsonwebtoken"
+import cookieParser from "cookie-parser";
 
 import routerProductos from "./src/routers/productos-router.js";
 import routerUsuarios from "./src/routers/user-router.js";
 import handleConnection from "./src/utils/handle-connection.js";
 import * as passportStrategy from "./src/utils/handle-passport.js"
+import * as passportStrategyJwt from "./src/utils/handle-jwt.js"
 
 //! Constantes
 const app = express();
@@ -33,10 +36,11 @@ app.set("views", "./views")
 
 //! Middlewares
 app.use(express.static("./public"));
-app.use(express.static("./views"));
+//app.use(express.static("./views"));
 app.use(express.json());
 app.use(express.urlencoded({ extends: true }));
 app.use(methodOverride('_method'))
+app.use(cookieParser())
 
 // ! Configuracion express-sessions
 app.use(
@@ -58,15 +62,6 @@ app.use("/api/productos", routerProductos);
 
 //?USUARIOS
 app.use("/api/usuarios", routerUsuarios);
-/* //* Cargar Producto Apunte
-app.get("/cargarApunte", (req, res) => {
-    res.sendFile("./loadProductApunte.html", {root: "views"})
-})
-
-//* Cargar Porducto Libro
-app.get("/cargarLibro", (req, res) => {
-    res.sendFile("./loadProductLibro.html", {root: "views"})
-}) */
 
 //! Arranque del servidor
 
