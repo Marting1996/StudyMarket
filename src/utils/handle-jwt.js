@@ -21,6 +21,7 @@ opts.secretOrKey = process.env.JWT;
 const comprobacionUsuario = async (jwt_payload, done) => {
   try {
     const usuario = await usuariosModels.obtenerUsuarioPorId(jwt_payload.id); 
+    console.log("usuario en [comprobacionUsuario]", usuario);
     
     if (usuario) {
       return done(null, usuario, { mensaje: "Se encontro el usuario" });

@@ -11,11 +11,11 @@ routerUsuarios.get('/register', controladorUsuarios.formularioRegistro)
 routerUsuarios.post('/register', controladorUsuarios.createUser)
 
 //!LOGIN
-routerUsuarios.get("/login", controladorUsuarios.login)
-//routerUsuarios.post("/login", controladorUsuarios.login)
+routerUsuarios.get("/login", controladorUsuarios.formularioLogeo)
+routerUsuarios.post("/login", controladorUsuarios.login)
 
 //!PERFIL
-routerUsuarios.get("/perfil", controladorUsuarios.perfil)
+routerUsuarios.get("/perfil", controladorUsuarios.perfil, controladorUsuarios.perfilHandler)
 
 //!READ ONE BY EMAIL
 routerUsuarios.get('/email/:email', controladorUsuarios.getUserByEmail) 

@@ -22,7 +22,7 @@ const comprobacionUsuario = async (email, password, done) => {
 
         return done(null, usuario)
     } catch (error) {
-        throw error
+        return done(error)
     }
 }
 

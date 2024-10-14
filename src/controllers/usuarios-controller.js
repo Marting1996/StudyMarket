@@ -20,28 +20,34 @@ const getAll = async (req, res) => {
 };
 
 //!GET ONE BY ID
-const getUserById = (req, res) => {
-  const id = Number(req.params.id);
-
-  const unUsuario = modelUsuarios.obtenerUsuarioPorId(id);
-
-  if (unUsuario) {
-    res.json(unUsuario);
-  } else {
-    res.status(404).json({ mensaje: "No se encontro el usuario por id" });
+const getUserById = async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    const unUsuario = await modelUsuarios.obtenerUsuarioPorId(id);
+    if (unUsuario) {
+      res.json(unUsuario);
+    } else {
+      res.status(404).json({ mensaje: "No se encontro el usuario por id" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ mensaje: "Error interno del servidor" });
   }
 };
 
 //!GET ONE BY EMAIL
-const getUserByEmail = (req, res) => {
-  const id = Number(req.params.email);
-
-  const unUsuario = modelUsuarios.obtenerUsuarioPorEmail(email);
-
-  if (unUsuario) {
-    res.json(unUsuario);
-  } else {
-    res.status(404).json({ mensaje: "No se encontro el usuario por email" });
+const getUserByEmail = async (req, res) => {
+  try {
+    const email = req.params.email;
+    const unUsuario = await modelUsuarios.obtenerUsuarioPorEmail(email);
+    if (unUsuario) {
+      res.json(unUsuario);
+    } else {
+      res.status(404).json({ mensaje: "No se encontro el usuario por email" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ mensaje: "Error interno del servidor" });
   }
 };
 
@@ -74,7 +80,7 @@ const createUser = async (req, res) => {
       errores.push({ mensaje: "El correo electrónico no es válido" });
     }
 
-    if (password == !confirm_password) {
+    if (password ==! confirm_password) {
       errores.push({ mensaje: "Las contraseñas no coinciden" });
     }
     //! Validaciones de contraseña para usar en la version final
@@ -133,30 +139,63 @@ const formularioLogeo = (req, res) => {
 };
 
 //?LOGIN JWT
-const login =
-  (passport.authenticate("local"),
-  (req, res) => {
-    // http://localhost:8080/jwt/login
-    // Estamos firmando el token
+const login = async (req, res) => {
+  passport.authenticate("local", { session: false }, (err, usuario, info) => {
+    if (err || !usuario) {
+      return res.status(400).json({ mensaje: "Error en el login", usuario: usuario})
+    }
+
+    req.login(usuario, {session: false}, (err) => {
+      if(err) {
+        res.send(err)
+      }
+      const token = jwt.sign({id: usuario._id}, process.env.JWT, {expiresIn: "1h"})
+
+      res.cookie('jwt', token, {httpOnly: true, secure: true})
+      return res.json({usuario, token})
+    })
+  })(req, res)
+}
+  
+/* const login =
+  (passport.authenticate("local"), (req, res) => {
     const payload = { id: req.user._id };
     const secret_jwt = process.env.JWT;
     const tiempo_duracion_token = { expiresIn: "1h" };
     const token = jwt.sign(payload, secret_jwt, tiempo_duracion_token);
     res.json({ token });
-  });
+  }); */
 
 //!PERFIL
-const perfil = (passport.authenticate("jwt"), (req, res) => {
-    //http://localhost:8080/jwt/profile
-    const usuario = req.user;
-    const usuarioPersonalidado = {
-      nombre: usuario.name,
-      email: usuario.email,
-    };
-    console.log("Usuario conectado:", usuarioPersonalidado);
-    
-    res.json({ usuario: usuarioPersonalidado });
-  });
+const perfil = (req, res, next) => {
+  passport.authenticate("jwt", { session: false }, (err, user, info) => {
+    if (err) {
+      console.error("Error en la autenticación:", err);
+      return res.status(500).json({ mensaje: "Error interno del servidor" });
+    }
+
+    if (!user) {
+      console.log("Información de autenticación:", info);
+      return res.status(401).json({ mensaje: "No autorizado" });
+    }
+
+    req.user = user;  // Asegúrate de que el usuario se establece en req
+    next();
+  })(req, res, next);
+};
+
+const perfilHandler = (req, res) => {
+  const usuario = req.user;
+  const usuarioPersonalizado = {
+    nombre: usuario.name,
+    email: usuario.email,
+  };
+
+  console.log("Usuario conectado:", usuarioPersonalizado);
+  res.json({ usuario: usuarioPersonalizado });
+};
+
+
 
 //!EDIT
 const editUsuatio = (req, res) => {
@@ -205,4 +244,5 @@ export default {
   //logout,
   perfil,
   formularioLogeo,
+  perfilHandler
 };
