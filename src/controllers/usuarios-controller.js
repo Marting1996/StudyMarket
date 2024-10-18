@@ -167,7 +167,7 @@ const login = async (req, res) => {
   }); */
 
 //!PERFIL
-const perfil = (req, res, next) => {
+const autorizado = (req, res, next) => {
   passport.authenticate("jwt", { session: false }, (err, user, info) => {
     if (err) {
       console.error("Error en la autenticación:", err);
@@ -184,7 +184,7 @@ const perfil = (req, res, next) => {
   })(req, res, next);
 };
 
-const perfilHandler = (req, res) => {
+const perfil = (req, res) => {
   const usuario = req.user;
   const usuarioPersonalizado = {
     nombre: usuario.name,
@@ -242,7 +242,7 @@ export default {
   formularioRegistro,
   login,
   //logout,
+  autorizado,
   perfil,
-  formularioLogeo,
-  perfilHandler
+  formularioLogeo
 };

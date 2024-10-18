@@ -15,7 +15,7 @@ routerUsuarios.get("/login", controladorUsuarios.formularioLogeo)
 routerUsuarios.post("/login", controladorUsuarios.login)
 
 //!PERFIL
-routerUsuarios.get("/perfil", controladorUsuarios.perfil, controladorUsuarios.perfilHandler)
+routerUsuarios.get("/perfil", controladorUsuarios.autorizado, controladorUsuarios.perfil)
 
 //!READ ONE BY EMAIL
 routerUsuarios.get('/email/:email', controladorUsuarios.getUserByEmail) 
