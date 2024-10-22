@@ -16,6 +16,10 @@ const usuariosEsquema = new mongoose.Schema(
       type: String,
       require: true,
     },
+    carrito: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "carrito"
+    }
   },
   {
     timestamps: true,

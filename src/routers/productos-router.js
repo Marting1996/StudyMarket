@@ -7,6 +7,7 @@ routerProductos.get('/', controladorProductos.getAll)
 
 //!READ ONE
 routerProductos.get('/:id', controladorProductos.getOne)
+routerProductos.post('/getOne', controladorProductos.getOne)
 
 //!CREATE
 routerProductos.post('/crearapunte', controladorProductos.createProduct)

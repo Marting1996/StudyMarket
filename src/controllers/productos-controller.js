@@ -7,15 +7,24 @@ const getAll = (req, res) => {
 };
 
 //!GET ONE
-const getOne = (req, res) => {
-  const id = Number(req.params.id);
-
-  const unProducto = modelProductos.obtenerProductosPorId(id);
-
-  if (unProducto) {
-    res.json(unProducto);
-  } else {
-    res.status(404).json({ mensaje: "Producto no disponible" });
+const getOne = async (req, res) => {
+  const  {pid}  = req.body
+  
+  console.log('[getOne]', pid);
+  
+  try {
+    const unProducto = await modelProductos.obtenerProductosPorId(pid);
+    console.log("[getOne] producto:", unProducto);
+    
+  
+    if (unProducto) {
+      res.json(unProducto);
+    } else {
+      res.status(404).json({ mensaje: "Producto no disponible" });
+    }
+  } catch (error) {
+    console.log("[getOne]", error);
+    res.status(500).json({ mensaje: "Error al obtener el producto" });
   }
 };
 

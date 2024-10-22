@@ -1,6 +1,7 @@
 import passport from "passport";
-import modelUsuarios from "../models/usuarios-models.js";
 import jwt from "jsonwebtoken";
+import modelUsuarios from "../models/usuarios-models.js";
+import modelCarrito from "../models/carrito-models.js"
 import * as passportStrategyJwt from "../utils/handle-jwt.js";
 
 const formularioRegistro = (req, res) => {
@@ -119,6 +120,11 @@ const createUser = async (req, res) => {
     // Crear usuarios
     const usuarioCreado = await modelUsuarios.crearUsuario(usuario);
 
+    //Crear carrito
+    const carritoCreado = await modelCarrito.crearCarrito({  usuario: usuarioCreado._id })
+    usuarioCreado.carrito = carritoCreado._id
+    await usuarioCreado.save()
+
     const objRespuesta = {
       name: usuarioCreado.name,
       email: usuarioCreado.email,
@@ -231,6 +237,7 @@ const eliminarUsuario = (req, res) => {
     res.status(404).json({ mensaje: "No se encontro el usuario" });
   }
 };
+
 
 export default {
   getAll,

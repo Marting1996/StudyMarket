@@ -10,6 +10,7 @@ import cookieParser from "cookie-parser";
 
 import routerProductos from "./src/routers/productos-router.js";
 import routerUsuarios from "./src/routers/user-router.js";
+import routerCarrito from "./src/routers/carrito-router.js";
 import handleConnection from "./src/utils/handle-connection.js";
 import * as passportStrategy from "./src/utils/handle-passport.js"
 import * as passportStrategyJwt from "./src/utils/handle-jwt.js"
@@ -62,6 +63,9 @@ app.use("/api/productos", routerProductos);
 
 //?USUARIOS
 app.use("/api/usuarios", routerUsuarios);
+
+//?CARRITO
+app.use("/api/carritos", routerCarrito)
 
 //! Arranque del servidor
 

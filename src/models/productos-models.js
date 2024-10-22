@@ -9,13 +9,21 @@ const obtenerTodosLosProductos = () => {
    return productos;
 };
 
-const obtenerProductosPorId = (id) => {
-   const producto = productos.find((prod) => prod.id === id);
-   return producto;
-};
+const obtenerProductosPorId = async (pid) => {
+   console.log("[obtenerProductosPorId] pid:", pid); 
+   try {
+     const producto = await ProductoModelo.findById(pid);
+     console.log("[obtenerProductosPorId] producto:", producto);
+     
+     return producto;
+   } catch (error) {
+     console.log("[obtenerProductosPorId]", error);
+     throw error;
+   }
+ };
 
-const obtenerLaPosicionDelProducto = (id) => {
-   return productos.findIndex((prod) => prod.id === id);
+const obtenerLaPosicionDelProducto = (pid) => {
+   return productos.findIndex((prod) => prod.pid === pid);
 };
 
 const crearProducto =  async (producto) => {
@@ -28,8 +36,8 @@ const crearProducto =  async (producto) => {
    }
 };
 
-const actualizarProducto = (index, id, productoPorEditar) => {
-   productoPorEditar.id = id;
+const actualizarProducto = (index, pid, productoPorEditar) => {
+   productoPorEditar.pid = pid;
    productos.splice(index, 1, productoPorEditar);
    return productoPorEditar;
 };
