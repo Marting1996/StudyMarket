@@ -39,10 +39,8 @@ const crearCarrito = async (carrito) => {
 const addProductToCart = async (cid, pid, cantidad) => {
     //cid: carrito id
     //pid: producto id
-    console.log("[addProductToCart] pid", pid);
     
     try {
-        //const producto = await modelProductos.obtenerProductosPorId(pid)
         const producto = await modelProductos.obtenerProductosPorId(pid)
         console.log("Producto en addProductToCart", producto);
         
@@ -50,6 +48,8 @@ const addProductToCart = async (cid, pid, cantidad) => {
             throw new Error('Producto no encontrado')
         }
         const carrito = await CarritoModelo.findById(cid)
+        console.log('carrito en [addProductToCart]:', carrito);
+        
         const productoExistente = carrito.productos.find((producto) => producto.producto.toString() === pid)
 
         if(productoExistente) {

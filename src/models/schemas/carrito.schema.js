@@ -10,15 +10,23 @@ const carritoEsquema = new mongoose.Schema(
         },
         productos: [
             {
-            producto: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "productos",
-            },
-            cantidad: {
-                type: Number,
-                require: true,
-                min: 1,
-            },
+                producto: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: "productos",
+                },
+                cantidad: {
+                    type: Number,
+                    require: true,
+                    min: 1,
+                },
+                titulo: {
+                    type: String,
+                    require: true
+                },
+                precio: {
+                    type: Number,
+                    require: true
+                }
             },
         ],
     },

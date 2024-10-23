@@ -23,12 +23,10 @@ const getOne = (req, res) => {
 
 const addProductToCartController = async (req, res) => {
     try {
-       const {pid, cantidad} = req.body
+       const {pid, cantidad, cid} = req.body
        if (!pid || !cantidad) {
         return res.status(400).json({mensaje: 'Producto y cantidad son requeridos'})
        }
-       const cid = "67156e350a6006a8d9fc5735"
-
        const carritoActualizado = await modelCarrito.addProductToCart(cid, pid, cantidad)
 
        return res.json(carritoActualizado)
