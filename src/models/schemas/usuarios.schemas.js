@@ -19,6 +19,12 @@ const usuariosEsquema = new mongoose.Schema(
     carrito: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "carrito"
+    },
+    resetPasswordToken: {
+      type: String
+    },
+    resetPasswordExpires: {
+      type: Date
     }
   },
   {

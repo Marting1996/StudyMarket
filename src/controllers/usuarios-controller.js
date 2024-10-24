@@ -1,7 +1,10 @@
 import passport from "passport";
 import jwt from "jsonwebtoken";
+import crypto from 'crypto'
 import modelUsuarios from "../models/usuarios-models.js";
 import modelCarrito from "../models/carrito-models.js"
+import transporter from "../config/email.js";
+import "dotenv/config";
 import * as passportStrategyJwt from "../utils/handle-jwt.js";
 
 const formularioRegistro = (req, res) => {
@@ -238,6 +241,52 @@ const eliminarUsuario = (req, res) => {
   }
 };
 
+//!RESET PASS
+const enviarMailRecuperacion = async (req, res) => {
+  try {
+    const {email} = req.body
+    const usuario = await modelUsuarios.obtenerUsuarioPorEmail(email)
+    //console.log('[enviarMailRecuperacion] usuario:', usuario);
+    
+    if(!usuario) {
+      console.log('[enviarMailRecuperacion] error:', error);
+      throw error
+    }
+
+    const token = crypto.randomBytes(20).toString('hex')
+    usuario.resetPasswordToken = token
+    usuario.resetPasswordExpires = Date.now() + 1000 * 60 * 60
+    await usuario.save()
+
+    const mailOptions = {
+      to: usuario.email,
+      from: process.env.EMAIL_USER,
+      subject: 'Recuperacion de contraseña',
+      text: `Por favor, haz click en el siguiente enlace para recuperar tu contraseña \n\n http://localhost:8080/reset/${token} \n\n`
+    }
+    await transporter.sendMail(mailOptions)
+    res.status(200).json({mensaje: 'Email enviado'})
+  } catch (error) {
+    console.log('[enviarMailRecuperacion]', error);
+    throw error
+  }
+}
+
+const resetPassword = async (req, res) => {
+  const { token } = req.params
+  const { password } = req.body
+  //console.log('[resetPassword] Token:', token);
+  console.log('[resetPassword] password:', password);
+  try {
+    const usuario = await modelUsuarios.restablecerContraseña(token, password)
+    console.log('[resetPassword] Usuario luego de cambiar la contraseña', usuario);
+    
+    res.status(200).json({mensaje: 'Contraseña restablecida con exito'})
+  } catch (error) {
+    res.status(500).json({mensaje: 'Error al reestablecer la contraseña'})
+  }
+}
+
 
 export default {
   getAll,
@@ -251,5 +300,7 @@ export default {
   //logout,
   autorizado,
   perfil,
-  formularioLogeo
+  formularioLogeo,
+  enviarMailRecuperacion,
+  resetPassword
 };

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import bcrypt from 'bcrypt'
 import usuariosEsquema from "./schemas/usuarios.schemas.js";
 
 const UsuarioModelo = mongoose.model("usuarios", usuariosEsquema);
@@ -27,13 +28,28 @@ const obtenerUsuarioPorId = async (id) => {
 const obtenerUsuarioPorEmail = async (email) => {
   try {
     const usuarioEncontrado = await UsuarioModelo.findOne({ email: email });
-    console.log("[usuarioEncontradoPorEmail]", usuarioEncontrado);
+    //console.log("[usuarioEncontradoPorEmail]", usuarioEncontrado);
     
     return usuarioEncontrado;
   } catch (error) {
     throw error;
   }
 };
+
+const obtenerUsuarioPorToken = async (token) => {
+  try {
+    //console.log('[obtenerUsuarioPorToken] Token', token);
+    const usuario = await UsuarioModelo.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpires: {$gt: Date.now()}
+    })
+    //console.log('[obtenerUsuarioPorToken] Usuario', usuario);
+    return usuario
+  } catch (error) {
+    console.log('[obtenerUsuarioPorToken]', error);
+    throw error
+  }
+}
 
 const obteneterLaPosicionDelUsuario = (id) => {
   const usuario = usuarios.find((user) => user.id === id);
@@ -75,6 +91,35 @@ const eliminarUsuario = (index) => {
   const usuarioEliminado = arrayUsuariosEliminados[0];
   return usuarioEliminado;
 };
+const encriptarPassword = async (password) => {
+  try {
+    const salt = await bcrypt.genSalt(10);
+    return await bcrypt.hash(password, salt);
+  } catch (error) {
+    throw error;
+  }
+}
+
+const restablecerContraseña = async (token, nuevaContraseña) => {
+  try {
+    const usuario = await obtenerUsuarioPorToken(token)
+    if(!usuario) {
+      console.log('[restablecerContraseña] El token es invalido o expiro', error);
+      throw error
+    }
+    console.log('[restablecerContraseña] Contraseña antes del hash', usuario.password);
+    
+    usuario.password = await encriptarPassword(nuevaContraseña)
+    console.log('[restablecerContraseña] Contraseña despues del hash', usuario.password);
+    usuario.resetPasswordToken = undefined
+    usuario.resetPasswordExpires = undefined
+    await usuario.save()
+    return usuario
+  } catch (error) {
+    console.log('[restablecerContrasena] Error:', error);
+    throw error
+  }
+}
 
 export default {
   obtenerTodosLosUsuarios,
@@ -84,5 +129,7 @@ export default {
   crearUsuario,
   actualizarUsuario,
   eliminarUsuario,
-  revisarPassword
+  revisarPassword,
+  obtenerUsuarioPorToken,
+  restablecerContraseña
 };

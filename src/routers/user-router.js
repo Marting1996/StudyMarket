@@ -29,6 +29,9 @@ routerUsuarios.put('/update/:id', controladorUsuarios.editUsuatio)
 //!DELETE
 routerUsuarios.delete('/delete/:id', controladorUsuarios.eliminarUsuario)
 
+//!RESET PASS
+routerUsuarios.post('/forgot', controladorUsuarios.enviarMailRecuperacion)
+routerUsuarios.post('/reset/:token', controladorUsuarios.resetPassword)
 //!OTRAS
 routerUsuarios.all('*', (req, res) => {
     res.status(404).json({ mensaje: "Recurso no encontrado" })
