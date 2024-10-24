@@ -14,7 +14,7 @@ const getOne = async (req, res) => {
   
   try {
     const unProducto = await modelProductos.obtenerProductosPorId(pid);
-    console.log("[getOne] producto:", unProducto);
+    //console.log("[getOne] producto:", unProducto);
     
   
     if (unProducto) {

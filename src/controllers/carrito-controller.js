@@ -2,15 +2,15 @@ import modelCarrito from "../models/carrito-models.js";
 import productosModels from "../models/productos-models.js";
 
 //! GET ALL
-const getAll = (req, res) => {
-  const carritos = modelCarrito.obtenerTodosLosCarritos();
+const getAll = async (req, res) => {
+  const carritos = await modelCarrito.obtenerTodosLosCarritos();
   res.json(carritos);
 };
 
 //! GET ONE
-const getOne = (req, res) => {
+const getOne = async (req, res) => {
   const id = Number(req.params.id);
-  const carrito = modelCarrito.obtenerCarritoPorId(id);
+  const carrito = await modelCarrito.obtenerCarritoPorId(id);
 
   if (carrito) {
     res.json(carrito);
@@ -31,9 +31,8 @@ const addProductToCartController = async (req, res) => {
 
        return res.json(carritoActualizado)
     } catch (error) {
-        console.log('[addProductToCartController]', error);
+        //console.log('[addProductToCartController]', error);
         return res.status(500).json({mensaje: "Error al agregar producto al carrito"})
-        
     }
 }
 

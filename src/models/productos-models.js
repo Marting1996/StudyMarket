@@ -10,10 +10,10 @@ const obtenerTodosLosProductos = () => {
 };
 
 const obtenerProductosPorId = async (pid) => {
-   console.log("[obtenerProductosPorId] pid:", pid); 
+   //console.log("[obtenerProductosPorId] pid:", pid); 
    try {
      const producto = await ProductoModelo.findById(pid);
-     console.log("[obtenerProductosPorId] producto:", producto);
+     //console.log("[obtenerProductosPorId] producto:", producto);
      
      return producto;
    } catch (error) {

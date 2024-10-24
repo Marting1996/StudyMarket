@@ -37,18 +37,13 @@ const crearCarrito = async (carrito) => {
 }
 
 const addProductToCart = async (cid, pid, cantidad) => {
-    //cid: carrito id
-    //pid: producto id
-    
     try {
         const producto = await modelProductos.obtenerProductosPorId(pid)
-        console.log("Producto en addProductToCart", producto);
         
         if(!producto) {
             throw new Error('Producto no encontrado')
         }
         const carrito = await CarritoModelo.findById(cid)
-        console.log('carrito en [addProductToCart]:', carrito);
         
         const productoExistente = carrito.productos.find((producto) => producto.producto.toString() === pid)
 
@@ -62,6 +57,14 @@ const addProductToCart = async (cid, pid, cantidad) => {
                 precio: producto.precio
             })
         }
+        // Calcular precio total
+        console.log('[addProductToCart] precio total:', carrito.precioTotal);
+        
+        carrito.precioTotal =  carrito.productos.reduce((total, item) => {
+            return total + item.cantidad * item.precio
+        }, 0)
+        console.log('[addProductToCart] precio total:', carrito.precioTotal);
+
         await carrito.save()
 
         const populateCart = await CarritoModelo.findById(cid).populate('productos.producto').lean()
