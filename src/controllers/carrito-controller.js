@@ -36,8 +36,32 @@ const addProductToCartController = async (req, res) => {
     }
 }
 
+//! ELIMINAR PRODUCTO DEL CARRITO
+
+const removeProductFromCart = async (req, res) => { 
+    try {
+        const { cid, pid } = req.params;
+
+        // Validación
+        if (!pid || !cid) {
+            return res.status(400).json({ mensaje: 'Producto y carrito son requeridos' });
+        }
+
+        // Llama al modelo para eliminar el producto del carrito
+        const carritoActualizado = await modelCarrito.removeProductFromCart(cid, pid);
+
+        // Retorna el carrito actualizado
+        return res.json(carritoActualizado);
+
+    } catch (error) {
+        console.log('[removeProductFromCartController]', error);
+        return res.status(500).json({ mensaje: 'Error al eliminar producto del carrito' });
+    }
+};
+
 export default {
     getAll,
     getOne,
-    addProductToCartController
+    addProductToCartController,
+    removeProductFromCart
 }
