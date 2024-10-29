@@ -72,9 +72,32 @@ const addProductToCart = async (cid, pid, cantidad) => {
     }
 }
 
+// Eliminar producto
+const removeProductFromCart = async (cid, pid) => {
+    try {
+        const carrito = await CarritoModelo.findById(cid);
+
+        if (!carrito) {
+            throw new Error('Carrito no encontrado');
+        }
+
+        // Filtrar los productos para eliminar el que tiene pid
+        carrito.productos = carrito.productos.filter(producto => producto.pid !== pid);
+        console.log(carrito.productos)
+        // Guardar el carrito actualizado
+        await carrito.save();
+
+        return carrito;
+    } catch (error) {
+        console.error('[removeProductFromCartModel]', error);
+        throw error;
+    }
+};
+
 export default {
     obtenerTodosLosCarritos,
     obtenerCarritoPorId,
     crearCarrito,
-    addProductToCart
+    addProductToCart,
+    removeProductFromCart
 }
