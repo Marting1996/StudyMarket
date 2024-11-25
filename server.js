@@ -7,6 +7,7 @@ import "dotenv/config";
 import methodOverride from "method-override";
 import jwt from "jsonwebtoken"
 import cookieParser from "cookie-parser";
+import cors from 'cors'
 
 import routerProductos from "./src/routers/productos-router.js";
 import routerUsuarios from "./src/routers/user-router.js";
@@ -35,9 +36,15 @@ app.engine(
 app.set("view engine", "hbs")
 app.set("views", "./views")
 
+//! CORS
+const corsOptions = {
+  origin: 'http://localhost:5173',
+  optionsSuccessStatus: 200,
+}
 //! Middlewares
 app.use(express.static("./public"));
 //app.use(express.static("./views"));
+app.use(cors(corsOptions))
 app.use(express.json());
 app.use(express.urlencoded({ extends: true }));
 app.use(methodOverride('_method'))
@@ -56,6 +63,7 @@ app.use(
 //! Configurando Passport
 app.use(passport.initialize())
 app.use(passport.session())
+
 
 //! Rutas
 //?PRODUCTOS

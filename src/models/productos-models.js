@@ -1,12 +1,19 @@
-import productos from "../db/productos.js";
 import mongoose from "mongoose";
 import productosEsquema from "./schemas/productos.schemas.js";
 
 const ProductoModelo = mongoose.model("productos", productosEsquema)
 let productoId = Date.now();
 
-const obtenerTodosLosProductos = () => {
-   return productos;
+const obtenerTodosLosProductos = async () => {
+   try {
+      const productos = await ProductoModelo.find()
+      console.log(productos);
+      
+      return productos
+   } catch (error) {
+      console.log("[obtenerTodosLosProductos]", error);
+      
+   }
 };
 
 const obtenerProductosPorId = async (pid) => {

@@ -1,9 +1,15 @@
 import modelProductos from "../models/productos-models.js";
 
 //!GET ALL
-const getAll = (req, res) => {
-  const prodoductos = modelProductos.obtenerTodosLosProductos();
-  res.json(prodoductos);
+const getAll = async (req, res) => {
+  try {
+    const productos = await modelProductos.obtenerTodosLosProductos()
+    res.json(productos)
+  } catch (error) {
+    console.log("[getAll]", error);
+
+    res.status(404).json({ mensaje: "No se encontraron los productos" });
+  }
 };
 
 //!GET ONE
