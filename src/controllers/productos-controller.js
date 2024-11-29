@@ -6,7 +6,7 @@ const getAll = async (req, res) => {
     const productos = await modelProductos.obtenerTodosLosProductos()
     res.json(productos)
   } catch (error) {
-    console.log("[getAll]", error);
+   // console.log("[getAll]", error);
 
     res.status(404).json({ mensaje: "No se encontraron los productos" });
   }
@@ -16,7 +16,7 @@ const getAll = async (req, res) => {
 const getOne = async (req, res) => {
   const  {pid}  = req.body
   
-  console.log('[getOne]', pid);
+  //console.log('[getOne]', pid);
   
   try {
     const unProducto = await modelProductos.obtenerProductosPorId(pid);
@@ -37,16 +37,14 @@ const getOne = async (req, res) => {
 //!CREATE
 const createProduct = async (req, res) => {
   const producto = req.body;
-  const { titulo, descripcion, etiquetas, precio } = producto;
+  const { nombre, descripcion, precio, imagen, categoria } = producto;
   const errores = [];
-
+  console.log(producto);
+  
   try {
     //Validadores
-    if (!titulo || !precio) {
-      errores.push({ mensaje: "Los campos Titulo y Precio son obligatorios" });
-    }
-    if (titulo.trim().length < 2) {
-      errores.push({ mensaje: "El titulo debe tener al menos 2 caracteres" });
+    if (!nombre || !precio || !descripcion || !imagen || !categoria) {
+      errores.push({ mensaje: "Los campos Nombre y Precio son obligatorios" });
     }
 
     if (errores.length > 0) {

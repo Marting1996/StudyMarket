@@ -7,7 +7,7 @@ let productoId = Date.now();
 const obtenerTodosLosProductos = async () => {
    try {
       const productos = await ProductoModelo.find()
-      console.log(productos);
+      //console.log(productos);
       
       return productos
    } catch (error) {
@@ -37,6 +37,8 @@ const crearProducto =  async (producto) => {
    try {
       const productoCreado = new ProductoModelo(producto)
       await productoCreado.save()
+      console.log('[crearProducto]', productoCreado);
+      
       return productoCreado
    } catch (error) {
       throw error

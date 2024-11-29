@@ -10,7 +10,7 @@ routerProductos.get('/:id', controladorProductos.getOne)
 routerProductos.post('/getOne', controladorProductos.getOne)
 
 //!CREATE
-routerProductos.post('/crearapunte', controladorProductos.createProduct)
+routerProductos.post('/cargar-producto', controladorProductos.createProduct)
 
 //!UPDATE
 routerProductos.put('/:id', controladorProductos.editProducto)
