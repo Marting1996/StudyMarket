@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 import productosEsquema from "./schemas/productos.schemas.js";
 
 const ProductoModelo = mongoose.model("productos", productosEsquema)
-let productoId = Date.now();
 
 const obtenerTodosLosProductos = async () => {
    try {
@@ -17,10 +16,10 @@ const obtenerTodosLosProductos = async () => {
 };
 
 const obtenerProductosPorId = async (pid) => {
-   //console.log("[obtenerProductosPorId] pid:", pid); 
+   console.log("[obtenerProductosPorId] pid:", pid); 
    try {
      const producto = await ProductoModelo.findById(pid);
-     //console.log("[obtenerProductosPorId] producto:", producto);
+     console.log("[obtenerProductosPorId] producto:", producto);
      
      return producto;
    } catch (error) {
@@ -30,7 +29,12 @@ const obtenerProductosPorId = async (pid) => {
  };
 
 const obtenerLaPosicionDelProducto = (pid) => {
-   return productos.findIndex((prod) => prod.pid === pid);
+   try {
+      const producto = producto.find((prod) => prod.pid === pid)
+      return producto
+   } catch (error) {
+      console.log("[obtenerProductosPorId]", error);
+   }
 };
 
 const crearProducto =  async (producto) => {
@@ -45,17 +49,29 @@ const crearProducto =  async (producto) => {
    }
 };
 
-const actualizarProducto = (index, pid, productoPorEditar) => {
-   productoPorEditar.pid = pid;
-   productos.splice(index, 1, productoPorEditar);
-   return productoPorEditar;
+const actualizarProducto = async (index, pid, productoPorEditar) => {
+   try { 
+      const productoActualizado = await ProductoModelo.findByIdAndUpdate(pid, productoPorEditar, { new: true }); 
+      return productoActualizado; 
+   } catch (error) { 
+      throw error; 
+   }
 };
 
-const eliminarProducto = (index) => {
-   const arrayProductosEliminados = productos.splice(index, 1);
-   const productoEliminado = arrayProductosEliminados[0];
-   return productoEliminado;
-};
+const eliminarProducto = async (pid) => {
+   console.log('Eliminando producto...', pid);
+   
+   try { 
+      const productoEliminado = await ProductoModelo.findOneAndDelete(pid); 
+      console.log(productoEliminado);
+      if(!productoEliminado) {
+         throw new Error("Producto no encontrado");
+      }
+      return productoEliminado; 
+   } catch (error) { 
+      throw error; 
+   }
+}; 
 
 export default {
    obtenerTodosLosProductos,

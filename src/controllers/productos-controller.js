@@ -14,11 +14,10 @@ const getAll = async (req, res) => {
 
 //!GET ONE
 const getOne = async (req, res) => {
-  const  {pid}  = req.body
-  
-  //console.log('[getOne]', pid);
   
   try {
+    const pid  = req.params.id
+    //console.log('[getOne pid]', pid);
     const unProducto = await modelProductos.obtenerProductosPorId(pid);
     //console.log("[getOne] producto:", unProducto);
     
@@ -63,41 +62,38 @@ const createProduct = async (req, res) => {
 };
 
 //!EDIT
-const editProducto = (req, res) => {
-  const id = Number(req.params.id);
+const editProducto = async (req, res) => {
+  const pid = req.params.id; 
   const productoPorEditar = req.body;
-
-  const index = modelProductos.obtenerLaPosicionDelProducto(id);
-
-  if (index >= 0) {
-    const productoActualizado = modelProductos.actualizarProducto(
-      index,
-      id,
-      productoPorEditar,
-    );
-    res.json(productoActualizado);
-    console.log("Producto actualizado correctamente");
-  } else {
-    res.status(404).json({
-      mensaje: "No se encontro el producto solicitado para editar",
-    });
-  }
+  /* const id = Number(req.params.id);
+  const productoPorEditar = req.body; */
+  try { 
+    const productoActualizado = await modelProductos.actualizarProducto(pid, productoPorEditar); 
+    if (!productoActualizado) { 
+      res.status(404).json({ mensaje: "No se encontró el producto solicitado para editar" }); 
+    } else { 
+      res.json(productoActualizado); 
+    } 
+    } catch (error) {
+       res.status(500).json({ mensaje: "No se pudo editar el producto" 
+       }); 
+      }
 };
 
 //!REMOVE
-const removeProducto = (req, res) => {
-  const id = Number(req.params.id);
-
-  const index = modelProductos.obtenerLaPosicionDelProducto(id);
-
-  if (index >= 0) {
-    const productoEliminado = modelProductos.eliminarProducto(index);
-    res.json(productoEliminado);
-    console.log("Producto eliminado correctamente");
-  } else {
-    res.status(404).json({
-      mensaje: "No se encontro el producto para eliminarlo",
-    });
+const removeProducto = async (req, res) => {
+  const pid = req.params.id;
+  console.log(pid);
+  
+  try { 
+    const productoEliminado = await modelProductos.eliminarProducto(pid); 
+    console.log('[removeProducto]', productoEliminado);
+    
+    if (!productoEliminado) { 
+      res.status(404).json({ mensaje: "No se encontró el producto para eliminarlo" }); 
+    } else { res.json({ mensaje: "Producto eliminado con éxito" }); 
+    } } catch (error) 
+    { res.status(500).json({ mensaje: "No se pudo eliminar el producto" }); 
   }
 };
 
