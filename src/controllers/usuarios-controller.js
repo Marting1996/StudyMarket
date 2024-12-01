@@ -58,6 +58,8 @@ const getUserByEmail = async (req, res) => {
 //!REGISTER
 const createUser = async (req, res) => {
   const usuario = req.body;
+ // console.log('[createUser]', usuario);
+  
 
   const { name, email, password, confirm_password } = usuario;
   const errores = [];
@@ -83,10 +85,10 @@ const createUser = async (req, res) => {
     if (!emailRegex.test(email)) {
       errores.push({ mensaje: "El correo electrónico no es válido" });
     }
-
-    if (password ==! confirm_password) {
+ 
+    if (password !== confirm_password) {
       errores.push({ mensaje: "Las contraseñas no coinciden" });
-    }
+    } 
     //! Validaciones de contraseña para usar en la version final
     /* const passwordRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
@@ -121,7 +123,9 @@ const createUser = async (req, res) => {
     }
 
     // Crear usuarios
+    
     const usuarioCreado = await modelUsuarios.crearUsuario(usuario);
+    //console.log('[createUser]', usuarioCreado);
 
     //Crear carrito
     const carritoCreado = await modelCarrito.crearCarrito({  usuario: usuarioCreado._id })

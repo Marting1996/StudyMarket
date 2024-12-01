@@ -16,10 +16,10 @@ const obtenerTodosLosProductos = async () => {
 };
 
 const obtenerProductosPorId = async (pid) => {
-   console.log("[obtenerProductosPorId] pid:", pid); 
+   //console.log("[obtenerProductosPorId] pid:", pid); 
    try {
      const producto = await ProductoModelo.findById(pid);
-     console.log("[obtenerProductosPorId] producto:", producto);
+    // console.log("[obtenerProductosPorId] producto:", producto);
      
      return producto;
    } catch (error) {
@@ -41,7 +41,7 @@ const crearProducto =  async (producto) => {
    try {
       const productoCreado = new ProductoModelo(producto)
       await productoCreado.save()
-      console.log('[crearProducto]', productoCreado);
+      //console.log('[crearProducto]', productoCreado);
       
       return productoCreado
    } catch (error) {
@@ -62,8 +62,8 @@ const eliminarProducto = async (pid) => {
    console.log('Eliminando producto...', pid);
    
    try { 
-      const productoEliminado = await ProductoModelo.findOneAndDelete(pid); 
-      console.log(productoEliminado);
+      const productoEliminado = await ProductoModelo.findByIdAndDelete(pid); 
+      //console.log(productoEliminado);
       if(!productoEliminado) {
          throw new Error("Producto no encontrado");
       }

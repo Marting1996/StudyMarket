@@ -58,12 +58,15 @@ const obteneterLaPosicionDelUsuario = (id) => {
 };
 
 const crearUsuario = async (usuario) => {
+ // console.log('[CrearUsuario:]', usuario);
   try {
     const usuarioCreado = new UsuarioModelo(usuario);
+    console.log('[CrearUsuario:]', usuarioCreado);
     usuarioCreado.password = await usuarioCreado.encriptarPassword(
       usuario.password,
     );
-
+    //console.log('[CrearUsuario:]', usuarioCreado);
+    
     await usuarioCreado.save();
     return usuarioCreado;
   } catch (error) {
